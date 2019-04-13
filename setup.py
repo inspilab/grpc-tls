@@ -1,13 +1,18 @@
 import os
 from setuptools import setup
+from distutils import util
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
     name='grpc-tls',
-    version='1.1.0',
-    packages=['core'],
+    version='1.1.2',
+    packages=[
+        'grpc_tls',
+        'grpc_tls.management',
+        'grpc_tls.management.commands',
+    ],
     description='This tools for generating grpc files',
     long_description=README,
     author='inspitrip',

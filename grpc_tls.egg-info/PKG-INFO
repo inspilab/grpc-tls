@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: grpc-tls
-Version: 1.1.0
+Version: 1.1.2
 Summary: This tools for generating grpc files
 Home-page: https://github.com/inspilab/grpc-tls/
 Author: inspitrip
