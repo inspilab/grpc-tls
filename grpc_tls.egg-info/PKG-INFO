@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: grpc-tls
+Version: 1.0
+Summary: This tools for generating grpc files
+Home-page: https://github.com/inspilab/grpc-tls/
+Author: inspitrip
+Author-email: hai@inspitrip.com
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
