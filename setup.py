@@ -3,11 +3,11 @@ from setuptools import setup
 from distutils import util
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.rst')).read()
+README = open(os.path.join(here, 'README.md')).read()
 
 setup(
     name='grpc-tls',
-    version='1.1.5',
+    version='1.1.6',
     packages=[
         'grpc_tls',
         'grpc_tls.management',
