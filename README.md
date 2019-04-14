@@ -19,6 +19,9 @@ INSTALLED_APPS = (
 )
 ```
 
+Update `GRPC_TLS_BASE_PROTO=app_name`.
+*Note*: This name must be unique if your app run multiple *.proto file
+
 ## Usage
 Generate *.proto file
 ```

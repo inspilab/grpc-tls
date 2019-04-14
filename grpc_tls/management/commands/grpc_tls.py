@@ -19,7 +19,7 @@ from grpc_tls.constants import GRPC_TLS_SUFFIX, GRPC_TLS_FIELDS, GRPC_TLS_AST_MA
     GRPC_TLS_IGNORE_FIELDS, GRPC_TLS_RPC_METHODS, GRPC_TLS_CRUD_TEMPLATE, \
     GRPC_TLS_RPC_CONTENT, GRPC_TLS_REMOVE_FIELDS, GRPC_TLS_DIR, GRPC_TLS_GRPC_PATH, \
     GRPC_TLS_PROTO_HEADER, GRPC_TLS_PROTO_FOOTER, GRPC_TLS_PROTO_PATH, \
-    GRPC_TLS_AUTO_FILE, GRPC_TLS_DISABLE_FIELD_TYPES, GRPC_TLS_MODELS_APP
+    GRPC_TLS_AUTO_FILE, GRPC_TLS_DISABLE_FIELD_TYPES, GRPC_TLS_MODELS_APP, GRPC_TLS_BASE_PROTO
 
 plural = engine().plural
 
@@ -191,6 +191,7 @@ def codify_model(app, model_name, model_defnition):
 
     ctx = dict(
         app=app, app_slug=sluggify(app), fields=fields, GRPC_TLS_DIR=GRPC_TLS_DIR,
+        GRPC_TLS_BASE_PROTO=GRPC_TLS_BASE_PROTO,
         foriegn_keys=foriegn_keys, ignore_fields=GRPC_TLS_IGNORE_FIELDS)
     ctx.update(model_defnition['inflections'])
     return GRPC_TLS_CRUD_TEMPLATE % ctx, GRPC_TLS_RPC_METHODS % ctx
@@ -258,8 +259,8 @@ def fix_grpc_import():
     with open(GRPC_TLS_GRPC_PATH, 'r') as f:
         filedata = f.read()
     filedata = filedata.replace(
-        'import grpc_app_pb2 as grpc__app__pb2',
-        'from . import grpc_app_pb2 as grpc__app__pb2')
+        'import %s_pb2 as %s__pb2' % (GRPC_TLS_BASE_PROTO, GRPC_TLS_BASE_PROTO),
+        'from . import %s_pb2 as %s__pb2' % (GRPC_TLS_BASE_PROTO, GRPC_TLS_BASE_PROTO))
     with open(GRPC_TLS_GRPC_PATH, 'w') as f:
         f.write(filedata)
 

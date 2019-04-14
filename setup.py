@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.md')).read()
 
 setup(
     name='grpc-tls',
-    version='1.1.6',
+    version='1.1.8',
     packages=[
         'grpc_tls',
         'grpc_tls.management',

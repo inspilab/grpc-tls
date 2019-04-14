@@ -7,14 +7,15 @@ def default(var_name, value):
     return value
 
 
+GRPC_TLS_BASE_PROTO = default('GRPC_TLS_BASE_PROTO', 'grpc_app')
 GRPC_TLS_DIR = default('GRPC_TLS_DIR', 'grpc_dir')
 GRPC_TLS_PORT = default('GRPC_TLS_PORT', '50051')
 GRPC_TLS_SUFFIX = default('GRPC_TLS_SUFFIX', 'GRPC')
 GRPC_TLS_AUTO_PACKAGE = default('GRPC_TLS_AUTO_PACKAGE', 'auto_grpc_app')
-GRPC_TLS_PROTO_FILE = default('GRPC_TLS_PROTO_FILE', 'grpc_app.proto')
 GRPC_TLS_MODELS_APP = default('GRPC_TLS_MODELS_APP', ['core'])
 
 # Derived constants
+GRPC_TLS_PROTO_FILE = '%s.proto' % GRPC_TLS_BASE_PROTO
 GRPC_TLS_GRPC_FILE = GRPC_TLS_PROTO_FILE.replace('.proto', '_pb2_grpc.py')
 GRPC_TLS_PROTO_PATH = '%s/%s' % (GRPC_TLS_DIR, GRPC_TLS_PROTO_FILE)
 GRPC_TLS_GRPC_PATH = '%s/%s' % (GRPC_TLS_DIR, GRPC_TLS_GRPC_FILE)
@@ -72,14 +73,14 @@ GRPC_TLS_AST_MAP = default('GRPC_TLS_AST_MAP', dict(
 GRPC_TLS_PROTO_HEADER = default('GRPC_TLS_PROTO_HEADER', '''
 syntax = "proto3";
 
-package grpc_app;
+package %s;
 
 message Void {}
 
 message ID {
     int64 id = 1;
 }
-''')
+''' % GRPC_TLS_BASE_PROTO)
 GRPC_TLS_PROTO_FOOTER = default('GRPC_TLS_PROTO_FOOTER', '')
 
 GRPC_TLS_CRUD_TEMPLATE = default('GRPC_TLS_CRUD_TEMPLATE', '''
@@ -124,9 +125,8 @@ def delete_%(model_name_lower)s(id):
 
 GRPC_TLS_RPC_METHODS = default('GRPC_TLS_RPC_METHODS', '''
 import json
-import six
 import datetime
-from %(GRPC_TLS_DIR)s.grpc_app_pb2 import %(model_name)s, Void
+from %(GRPC_TLS_DIR)s.%(GRPC_TLS_BASE_PROTO)s_pb2 import %(model_name)s, Void
 from %(GRPC_TLS_DIR)s.%(app_slug)s_crud import (
     read_%(model_name_lower)s,
     delete_%(model_name_lower)s,
@@ -144,7 +144,7 @@ def %(model_name_lower)s_dj_to_dict(obj):
     for field in %(fields)s:
         value = getattr(obj, field, None)
         # Pre process value
-        if isinstance(value, six.text_type):
+        if isinstance(value, unicode):
             value = str(value)
         if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value)
