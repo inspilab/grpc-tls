@@ -123,6 +123,7 @@ def delete_%(model_name_lower)s(id):
 ''')
 
 GRPC_TLS_RPC_METHODS = default('GRPC_TLS_RPC_METHODS', '''
+import json
 from %(GRPC_TLS_DIR)s.grpc_app_pb2 import %(model_name)s, Void
 from %(GRPC_TLS_DIR)s.%(app_slug)s_crud import (
     read_%(model_name_lower)s,
@@ -141,13 +142,20 @@ def %(model_name_lower)s_to_dict(obj, is_dj_obj=False):
     foriegn_keys = %(foriegn_keys)s
     for field in %(fields)s:
         value = getattr(obj, field, None)
+        # Remove FK value is None
         if field in foriegn_keys and value in [0, '']:
             continue
-        if field in [None, 'None']:
+        # Remove value is None
+        if value in [None, 'None']:
             continue
-        d[field] = value
+        # Pre process value
+        if is_dj_obj and isinstance(value, unicode):
+            value = str(value)
+        if is_dj_obj and (isinstance(value, dict) or isinstance(value, list)):
+            value = json.dumps(value)
         if is_dj_obj and field in ['created', 'modified']:
-            d[field] = value.isoformat()
+            value = value.isoformat()
+        d[str(field)] = value
     return d
 
 

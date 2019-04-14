@@ -259,7 +259,7 @@ def fix_grpc_import():
         filedata = f.read()
     filedata = filedata.replace(
         'import grpc_app_pb2 as grpc__app__pb2',
-        'from %s import grpc_app_pb2 as grpc__app__pb2' % GRPC_TLS_DIR)
+        'from . import grpc_app_pb2 as grpc__app__pb2')
     with open(GRPC_TLS_GRPC_PATH, 'w') as f:
         f.write(filedata)
 
