@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
     name='grpc-tls',
-    version='1.1.2',
+    version='1.1.3',
     packages=[
         'grpc_tls',
         'grpc_tls.management',
@@ -20,9 +20,7 @@ setup(
     url='https://github.com/inspilab/grpc-tls/',
     license='MIT',
     install_requires=[
-        'Django>=1.11',
-        'grpcio>=1.19.0',
-        'grpcio-tools>=1.19.0'
+        'grpcio-tools>=1.19.0',
         'inflect>=2.1.0'
     ]
 )
