@@ -124,6 +124,7 @@ def delete_%(model_name_lower)s(id):
 
 GRPC_TLS_RPC_METHODS = default('GRPC_TLS_RPC_METHODS', '''
 import json
+import six
 import datetime
 from %(GRPC_TLS_DIR)s.grpc_app_pb2 import %(model_name)s, Void
 from %(GRPC_TLS_DIR)s.%(app_slug)s_crud import (
@@ -143,7 +144,7 @@ def %(model_name_lower)s_dj_to_dict(obj):
     for field in %(fields)s:
         value = getattr(obj, field, None)
         # Pre process value
-        if isinstance(value, unicode):
+        if isinstance(value, six.text_type):
             value = str(value)
         if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value)
