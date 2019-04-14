@@ -124,6 +124,7 @@ def delete_%(model_name_lower)s(id):
 
 GRPC_TLS_RPC_METHODS = default('GRPC_TLS_RPC_METHODS', '''
 import json
+import datetime
 from %(GRPC_TLS_DIR)s.grpc_app_pb2 import %(model_name)s, Void
 from %(GRPC_TLS_DIR)s.%(app_slug)s_crud import (
     read_%(model_name_lower)s,
@@ -134,28 +135,33 @@ from %(GRPC_TLS_DIR)s.%(app_slug)s_crud import (
 )
 
 
-def %(model_name_lower)s_to_dict(obj, is_dj_obj=False):
+def %(model_name_lower)s_dj_to_dict(obj):
     # Cycle through fields directly
     d = {}
     if obj is None:
         return d
-    foriegn_keys = %(foriegn_keys)s
     for field in %(fields)s:
         value = getattr(obj, field, None)
-        # Remove FK value is None
-        if field in foriegn_keys and value in [0, '']:
-            continue
-        # Remove value is None
-        if value in [None, 'None']:
-            continue
         # Pre process value
-        if is_dj_obj and isinstance(value, unicode):
+        if isinstance(value, unicode):
             value = str(value)
-        if is_dj_obj and (isinstance(value, dict) or isinstance(value, list)):
+        if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value)
-        if is_dj_obj and field in ['created', 'modified']:
+        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date):
             value = value.isoformat()
         d[str(field)] = value
+    return d
+
+
+def %(model_name_lower)s_pb_to_dict(obj):
+    # Cycle through fields directly
+    d = {}
+    if obj is None:
+        return d
+
+    for field, value in obj.ListFields():
+        if hasattr(field, 'name'):
+            d[str(field.name)] = value
     return d
 
 
@@ -164,18 +170,18 @@ class %(rpc_name)s:
     def Read%(model_name_plural)sFilter(self, void, context):
         dj_objs = read_%(model_name_lower_plural)s_filter()
         return [%(model_name)s(
-            **%(model_name_lower)s_to_dict(dj_obj, is_dj_obj=True)) for dj_obj in dj_objs]
+            **%(model_name_lower)s_dj_to_dict(dj_obj)) for dj_obj in dj_objs]
 
     def Read%(model_name)s(self, id, context):
         dj_obj = read_%(model_name_lower)s(id=id.id)
-        return %(model_name)s(**%(model_name_lower)s_to_dict(dj_obj, is_dj_obj=True))
+        return %(model_name)s(**%(model_name_lower)s_dj_to_dict(dj_obj))
 
     def Create%(model_name)s(self, obj, context):
-        dj_obj = create_%(model_name_lower)s(**%(model_name_lower)s_to_dict(obj))
-        return %(model_name)s(**%(model_name_lower)s_to_dict(dj_obj, is_dj_obj=True))
+        dj_obj = create_%(model_name_lower)s(**%(model_name_lower)s_pb_to_dict(obj))
+        return %(model_name)s(**%(model_name_lower)s_dj_to_dict(dj_obj))
 
     def Update%(model_name)s(self, obj, context):
-        obj_dict = %(model_name_lower)s_to_dict(obj)
+        obj_dict = %(model_name_lower)s_pb_to_dict(obj)
         del obj_dict['id']
         obj = update_%(model_name_lower)s(obj.id, **obj_dict)
         return Void()
