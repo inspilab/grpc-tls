@@ -1,11 +1,11 @@
 # gRPC tools
 This is tool for auto generating *.proto and mapping django model with protobuf.
 
-# Requirements
+## Requirements
 - Python (2.7, 3.4, 3.5, 3.6, 3.7)
 - Django (1.11, 2.0, 2.1, 2.2)
 
-# Installation
+## Installation
 Install using pip
 ```
 pip install grpc-tls
@@ -19,7 +19,7 @@ INSTALLED_APPS = (
 )
 ```
 
-# Usage
+## Usage
 Generate *.proto file
 ```
 python manage.py grpc_tls
@@ -27,8 +27,12 @@ python manage.py grpc_tls
 
 All files will be generated in `grpc_dir/*`
 
-# Runserver
-Create a django command line: `run_grpc.py`
+## Example
+Let's take a look at a quick example of running gRPC server.
+
+First generate proto files by running command line above.
+
+Then create a django command line: `run_grpc.py`.
 ```
 import grpc
 from concurrent import futures
@@ -54,9 +58,11 @@ class Command(BaseCommand):
             server.stop(0)
 ```
 
-Then start gRPC server:
+Start gRPC server:
 ```
 python manage.py run_grpc
 ```
-# Notes
+You can now send request at `http://127.0.0.1:50051/`
+
+## Notes
 DO NOT FILES IN `grpc_dir`
