@@ -19,7 +19,12 @@ INSTALLED_APPS = (
 )
 ```
 
-Update `GRPC_TLS_BASE_PROTO=app_name`.
+Update list apps your want migrate to protobuf:
+`GRPC_TLS_MODELS_APP=['core']`
+
+Update proto file name:
+`GRPC_TLS_BASE_PROTO='app_name'`.
+
 *Note*: This name must be unique if your app run multiple *.proto file
 
 ## Usage
