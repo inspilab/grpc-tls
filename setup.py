@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.md')).read()
 
 setup(
     name='grpc-tls',
-    version='1.1.9',
+    version='1.1.10',
     packages=[
         'grpc_tls',
         'grpc_tls.management',
@@ -21,6 +21,7 @@ setup(
     license='MIT',
     install_requires=[
         'grpcio-tools>=1.19.0',
-        'inflect>=2.1.0'
+        'inflect>=2.1.0',
+        'pathlib==1.0.1'
     ]
 )
